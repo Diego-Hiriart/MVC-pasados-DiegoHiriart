@@ -5,7 +5,7 @@ var cors = require('cors');//Cross origin resource sharing
 require('../database/mongo')
 
 const user = require('../routes/user');
-const equipment = require('../routes/equipment');
+const borrowing = require('../routes/borrowing');
 
 const app = express();//Creates the app (I think)
 
@@ -15,7 +15,7 @@ app.use(express.json())
 
 //Routes for this backend
 app.use('/user', user)
-app.use('/equipment', equipment)
+app.use('/borrowing', borrowing)
 
 //Listen for requests on the set port
 app.listen(port, () => {
