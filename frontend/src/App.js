@@ -1,30 +1,29 @@
-import React from 'react'
-import NewUser from './views/Users/NewUser'
-import NewBorrowing from './views/Borrowings/NewBorrowing'
-import BorrowingsFilter from './views/BorrowingsFilter/BorrowingsFilter'
-import ContextProvider from './context/ContextProvider'
+import {React} from "react";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import GetUsers from "./Views/Users/GetUsers";
+import CreateUser from "./Views/Users/Newuser";
+import GetBorrowings from "./Views/Borrowings/GetBorrowings"
+import NewBorrowing from "./Views/Borrowings/NewBorrowing"
+import Home from "./Views/Home";
+import Error from "./Views/404";
 
-const App = () => {
+function App() {
 
   return (
-    <ContextProvider>
-      <div className="container" style={{ marginTop: 20 }}>
-        <div className="row">
-          <div className="col-6">
-            < NewUser />
-          </div>
-          <div className="col-6">
-            <NewBorrowing/>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            <BorrowingsFilter />
-          </div>
-        </div>
-      </div>
-    </ContextProvider>
-  )
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home/>}/>{/*The "" path redirects to the component*/}
+          <Route path="/users/get" element={<GetUsers/>}/>
+          <Route path="/users/create" element={<CreateUser/>}/>
+          <Route path="/borrowings/get" element={<GetBorrowings/>}/>
+          <Route path="/borrowings/create" element={<NewBorrowing/>}/>
+          <Route path="*" element={<Error/>}/>{/*If a bad route is given*/}
+        </Routes>
+      </Router>
+    </>
+  );
+
 }
 
 export default App;
