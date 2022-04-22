@@ -70,7 +70,9 @@ function GetUsers(){
                                         {/*Use format to give the yyy-MM-dd format to the string obtained by parsing an ISO date*/}
                                         <td style={tableStyle}>{format(parseISO(borrowing.borrowStart), 'yyy-MM-dd')}</td>
                                         <td style={tableStyle}>{format(parseISO(borrowing.borrowEnd), 'yyy-MM-dd')}</td>
-                                        <td style={tableStyle}>{format(parseISO(borrowing.returnDate), 'yyy-MM-dd')}</td>
+                                        <td style={tableStyle}>{borrowing.returnDate != null ? 
+                                                                format(parseISO(borrowing.returnDate), 'yyy-MM-dd') 
+                                                                : 'Unknown' }</td>
                                         <td style={tableStyle}>{borrowing.fine}</td>
                                         <td style={tableStyle}>{borrowing.status}</td>
                                     </tr>

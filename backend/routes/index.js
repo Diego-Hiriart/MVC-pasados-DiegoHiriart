@@ -17,4 +17,9 @@ app.use(express.json())
 app.use('/user', user)
 app.use('/borrowing', borrowing)
 
+//For debug mode
+app.listen( port , () => {
+    console.log('(Debug) Listening on port: ' + port );
+})
+
 module.exports = app
