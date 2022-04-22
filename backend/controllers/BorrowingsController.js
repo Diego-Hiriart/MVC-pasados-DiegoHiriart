@@ -86,7 +86,7 @@ const BorrowingsController = {
                 status : req.body.status
             };
 
-            const borrowing = await Borrowing.findByIdAndUpdate(req.body._id, update, {new : true});//"{new: true}" returns the coument as it is after the update
+            const borrowing = await Borrowing.findByIdAndUpdate(req.body._id, update, {new : true});//"{new: true}" returns the document as it is after the update
 
             console.log(borrowing);
 
@@ -104,6 +104,10 @@ const BorrowingsController = {
         try{
             const borrowing = await Borrowing.findByIdAndDelete(req.body._id)
 
+            if (!borrowing){
+                return res.status(400).send({message: 'Borrowing not found'})
+            }
+            
             return res.send(borrowing);
         }catch (e){
             res.status(500).send({error: e.message});

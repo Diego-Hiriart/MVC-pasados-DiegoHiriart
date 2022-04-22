@@ -28,6 +28,44 @@ const UsersController = {
         }catch (e) {
             res.status(500).send({error: e.message});
         }
+    },
+
+    updateUser : async (req, res) => {
+        try{
+            const update = {
+                userId : req.body.userId,
+                firstName : req.body.firstName,
+                lastName : req.body.lastName,
+                phone : req.body.phone,
+                email : req.body.email
+            };
+
+            const user = await User.findByIdAndUpdate(req.body._id, update, {new : true});//"{new: true}" returns the document as it is after the update
+
+            console.log(user);
+
+            if (!user){
+                return res.status(400).send({message: 'User not found'})
+            }
+
+            return res.send(user);
+        }catch (e){
+            res.status(500).send({error: e.message});
+        }
+    },
+
+    deleteUser : async (req, res) => {
+        try{
+            const user = await User.findByIdAndDelete(req.body._id)
+
+            if (!user){
+                return res.status(400).send({message: 'User not found'})
+            }
+            
+            return res.send(user);
+        }catch (e){
+            res.status(500).send({error: e.message});
+        }
     }
 }
 
