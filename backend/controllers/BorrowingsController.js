@@ -20,7 +20,7 @@ const BorrowingsController = {
 
     getAllBorrowings: async (req, res) => {
         try{
-            const borrowing = await Borrowing.find({}).populate('idUser')
+            const borrowing = await Borrowing.find({}).populate('_idUser')
             if(!borrowing){
                 return res.status(400).send({message: 'Could not find borrowings'})
             }

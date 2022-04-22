@@ -6,6 +6,10 @@ const BorrowingSchema = new Schema({
         type: Schema.ObjectId,
         ref : 'User'
     },
+    equipment : {
+        type : String,
+        required : true
+    },
     borrowStart : {//This was just a string, I changed it to be a propper date, Mongo allows it
         type : Date,
         default: Date.now,
