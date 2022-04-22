@@ -17,9 +17,4 @@ app.use(express.json())
 app.use('/user', user)
 app.use('/borrowing', borrowing)
 
-//Listen for requests on the set port
-app.listen(port, () => {
-  console.log('Listening on port: ' + port);
-})
-
 module.exports = app
