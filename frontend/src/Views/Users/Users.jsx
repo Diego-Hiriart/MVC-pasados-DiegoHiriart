@@ -12,6 +12,7 @@ function Users(){
     })
 
     const inputStyle = {'margin':'2px'};
+    const tableStyle = {"borderWidth":"1px", 'borderColor':"#aaaaaa", 'borderStyle':'solid', 'padding':'5px'};
 
     //Check if the user is logged in as soon as this page is entered
     useEffect(() => {
@@ -78,8 +79,6 @@ function Users(){
 
         create(newUser);
     }
-
-    const tableStyle = {"borderWidth":"1px", 'borderColor':"#aaaaaa", 'borderStyle':'solid', 'padding':'5px'};
 
     let content = 
         <div className="container">

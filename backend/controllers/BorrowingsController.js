@@ -103,7 +103,7 @@ const BorrowingsController = {
 
     deleteBorrowing : async (req, res) => {
         try{
-            const borrowing = await Borrowing.findByIdAndDelete(req.body._id)
+            const borrowing = await Borrowing.findByIdAndDelete(req.body)//Body must contain id only
 
             if (!borrowing){
                 return res.status(400).send({message: 'Borrowing not found'})
