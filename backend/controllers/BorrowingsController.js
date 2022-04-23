@@ -4,11 +4,13 @@ const BorrowingsController = {
     createBorrowing: async (req, res) => {
         try{
 
-            //Get end date and actual return date 
-            const end = new Date(req.body.borrowEnd);
+            //Get end date and actual return date
+            /* This awful ".replace(/-/g, '\/').replace(/T.+/, '')" is needed because if there are '-' 
+            instead of '/' the date gets messed up by one day beacuse of UTC*/
+            const end = new Date((req.body.borrowEnd).replace(/-/g, '\/').replace(/T.+/, ''));
             let returned = null;
             if(req.body.returnDate != null || req.body.returnDate != undefined){//If there is a reuturn date to use
-                returned = new Date(req.body.returnDate);
+                returned = new Date((req.body.returnDate).replace(/-/g, '\/').replace(/T.+/, ''));
             }
             let fine = 0;
             let days = 0;
@@ -44,11 +46,39 @@ const BorrowingsController = {
 
     getAllBorrowings: async (req, res) => {
         try{
-            const borrowing = await Borrowing.find({}).populate('_idUser')
-            if(!borrowing){
+            const borrowings = await Borrowing.find({}).populate('_idUser')
+            if(!borrowings){
                 return res.status(400).send({message: 'Could not find borrowings'})
             }
-            return res.send(borrowing);
+            return res.send(borrowings);
+        }catch (e) {
+            res.status(500).send({error: e.message});
+        }
+    },
+
+    filterBorrowings : async (req, res) => {
+        try{
+            const borrowings = await Borrowing.find({}).populate('_idUser')
+            /* That  replace(/-/g, '\/').replace(/T.+/, '') is not needed here because otherwise these dates become GMT -5 wich messes up the start date comparison*/
+            const startDate = new Date((req.body.borrowStart))//Get start and end dates that want to be used as filters
+            const endDate = new Date ((req.body.borrowEnd))
+            if(!borrowings){
+                return res.status(400).send({message: 'Could not find borrowings'})
+            }
+            const filteredBorrowings = []
+            borrowings.forEach(borrowing => {
+                /* That  replace(/-/g, '\/').replace(/T.+/, '') is not needed either here because on the dabate its GMT 0 which is fine for this comparison because the 
+                   previous startDate and endDate dont need that .replace() either*/
+                if(new Date(borrowing.borrowStart) >= startDate && 
+                    new Date(borrowing.borrowEnd) <= endDate){//Filter by start and end dates
+                    filteredBorrowings.push(borrowing);//Add to filtered results
+                    console.log(startDate)
+                    console.log(endDate)
+                    console.log(new Date(borrowing.borrowStart))
+                    console.log(new Date(borrowing.borrowEnd))
+                }
+            });
+            return res.send(filteredBorrowings);
         }catch (e) {
             res.status(500).send({error: e.message});
         }
@@ -57,10 +87,10 @@ const BorrowingsController = {
     updateBorrowing : async (req, res) => {
         try{
             //Get end date and actual return date 
-            const end = new Date(req.body.borrowEnd);
+            const end = new Date((req.body.borrowEnd).replace(/-/g, '\/').replace(/T.+/, ''));
             let returned = null;
             if(req.body.returnDate != null || req.body.returnDate != undefined){//If there is a reuturn date to use
-                returned = new Date(req.body.returnDate);
+                returned = new Date((req.body.returnDate).replace(/-/g, '\/').replace(/T.+/, ''));
             }
             let fine = 0;
             let days = 0;

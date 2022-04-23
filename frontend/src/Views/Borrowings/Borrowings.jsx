@@ -17,9 +17,14 @@ function Borrowings(){
         fine : '',
         status : ''
     })
+    const [filterForm, setFilterForm] = useState({
+        borrowStart : '',
+        borrowEnd : ''
+    })
 
     const inputStyle = {'margin':'2px'};
-    const tableStyle = {"borderWidth":"1px", 'borderColor':"#aaaaaa", 'borderStyle':'solid', 'padding':'5px'};
+    const spacedStyle = {'margin':'2px'};
+    const tableStyle = {"borderWidth":"1px", 'borderColor':"#aaaaaa", 'borderStyle':'solid', 'padding':'5px', 'overflow':'auto'};
 
     //Check if the user is logged in as soon as this page is entered
     useEffect(() => {
@@ -31,7 +36,7 @@ function Borrowings(){
     const getAll = async () => {
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json',},
+            headers: { 'Content-Type': 'application/json'}
         };
         await fetch(urlGetBorrowings, requestOptions)
         .then(res => {
@@ -86,6 +91,7 @@ function Borrowings(){
             await fetch(urlPost, requestOptions)
                 .then(res => {
                     if(res.ok){
+                        alert("User created successfully")
                         getAll();//Updates table
                     }else{
                         console.log("Creation error");
@@ -172,7 +178,7 @@ function Borrowings(){
         };
         await fetch(urlDel, requestOptions)
             .then(res => {
-                if(res.ok){               
+                if(res.ok){
                     getAll();//Reload due to a state change
                 }else{
                     console.log("Deletion failed")
@@ -180,8 +186,55 @@ function Borrowings(){
             }) 
     }
 
+    const handleFilterChange = (event) => {
+        event.preventDefault();
+
+        const fieldName = event.target.getAttribute("name");//Get the name field
+        const fieldValue = event.target.value;//Get the value of the field
+
+        const newFilterData = {...filterForm}//Get the current state of newBorrowing
+        newFilterData[fieldName] = fieldValue//Update the value of a field
+
+        setFilterForm(newFilterData);
+    };
+
+    const handleFilterSubmit = (event) => {
+        event.preventDefault();
+
+        const urlGetFilteredBorrowings = 'http://localhost:4000/borrowing/filter';
+        const getFiltered = async () => {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body : JSON.stringify(filterForm)
+            };
+            await fetch(urlGetFilteredBorrowings, requestOptions)
+            .then(res => {
+                if(res.ok){
+                    res.json()
+                    .then(json => setBorrowings(json));
+                }else{
+                    console.log("GET filtered borrowings failed");
+                }
+            })
+        } 
+
+        const editedBorrowing = {
+            _id: editBorrowingId,
+            _idUser : borrowingForm._idUser,
+            equipment : borrowingForm.equipment,
+            borrowStart : borrowingForm.borrowStart,
+            borrowEnd : borrowingForm.borrowEnd,
+            returnDate : borrowingForm.returnDate,
+            fine : borrowingForm.fine,
+            status : borrowingForm.status
+        }
+
+        getFiltered(editedBorrowing);
+    }
+
     let content = 
-        <div className="container">
+        <div className="container" style={{margin:'6px'}}>
             <div style={{display: 'flex', flexDirection:"column",  justifyContent:'normal', alignItems:'center', width: '70%'}}>
                 <h1>Get Borrowings</h1>
                 <p>Something went wrong</p>  
@@ -192,9 +245,18 @@ function Borrowings(){
     
     if(borrowings){//If borrowings array has content
         content =
-            <div className="container">
-                <div style={{display: 'flex',  justifyContent:'normal', alignItems:'center', width: '100%'}}>
+            <div className="container" style={{margin:'6px'}}>
+                <div style={{display: 'flex', flexDirection:'column',  justifyContent:'normal', alignItems:'center', width: '100%'}}>
                     <h1>Get borrowings</h1>
+                    <p>Filter the borrowing by start and end date: </p>
+                    <form onSubmit={handleFilterSubmit}>
+                        <label style={{margin:'4px'}}>Start date </label>
+                        <input type="date" name="borrowStart" required="required" placeholder="start date" onChange={handleFilterChange} style={inputStyle}/>
+                        <label style={{margin:'4px'}}>End date </label>
+                        <input type="date" name="borrowEnd" required="required" placeholder="end date" onChange={handleFilterChange} style={inputStyle}/>
+                        <button type="submit">Filter</button>
+                    </form>
+                    <button type="button" onClick={getAll}>Clear filter</button>{/*resets the view*/}
                 </div>
                 <div style={{display: 'flex', flexDirection:"column", justifyContent:'center', alignItems:'center', width: '100%'}}>
                     <form onSubmit={handleEditFormSubmit}>
@@ -217,10 +279,10 @@ function Borrowings(){
                                     borrowings.map((borrowing) => (
                                         <Fragment>
                                             {/*If editBorrowingId equals the id of this row's borrowing it means the button was clicked and the editable row must be rendered, 
-                                            if it null it means the user does not want to edit anything, this is seen when the editing is done on canceled*/}
+                                            if it is null it means the user does not want to edit anything, this is seen when the editing is done on canceled*/}
                                             {editBorrowingId === borrowing._id ?  
                                             <EditableRowBorrowing borrowing={borrowing} users={users} handleFormChange={handleFormChange} handleCancelClick={handleCancelClick}/> :
-                                            <ReadRowBorrowing borrowing = {borrowing} handleEditClick={handleEditClick} handleDeleteClick={handleDeleteClick}/>}    
+                                            <ReadRowBorrowing borrowing = {borrowing} handleEditClick={handleEditClick} handleDeleteClick={handleDeleteClick}/>}  
                                         </Fragment>
                                     ))
                                 }                            
@@ -244,12 +306,16 @@ function Borrowings(){
                             <label>End date </label>
                             <input type="date" name="borrowEnd" required="required" placeholder="end date" onChange={handleFormChange} style={inputStyle}/>
                             <label>Return date </label>
-                            <input type="date" name="returnDate" required="required" placeholder="return date" onChange={handleFormChange} style={inputStyle}/>
+                            <input type="date" name="returnDate" placeholder="return date" onChange={handleFormChange} style={inputStyle}/>
                             <label>Fine </label>
-                            <input type="text" name="fine" required="required" placeholder="fine" onChange={handleFormChange} style={inputStyle}/>
+                            <input type="text" name="fine" placeholder="fine" onChange={handleFormChange} style={inputStyle}/>
                             <label>Status </label>
-                            <input type="text" name="status" required="required" placeholder="status" onChange={handleFormChange} style={inputStyle}/>
-                            <button type="submit" style={inputStyle}>Add borrowing</button>
+                            <select name="status" required="required" id="users" defaultValue={"default"} onChange={handleFormChange} style={inputStyle}>
+                                <option value={"default"} disabled>Choose an option</option>
+                                <option>borrowed</option>
+                                <option>returned</option>
+                            </select>
+                            <button type="submit" style={spacedStyle}>Add borrowing</button>
                         </form>
                     </div>
                 </div>

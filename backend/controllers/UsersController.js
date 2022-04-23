@@ -56,7 +56,7 @@ const UsersController = {
 
     deleteUser : async (req, res) => {
         try{
-            const user = await User.findByIdAndDelete(req.body._id)
+            const user = await User.findByIdAndDelete(req.body)//Body must contain id only
 
             if (!user){
                 return res.status(400).send({message: 'User not found'})
