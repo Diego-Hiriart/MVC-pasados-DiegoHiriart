@@ -168,9 +168,8 @@ function Borrowings(){
         const requestOptions = {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(borrowingId)
+            body: JSON.stringify({_id : borrowingId})//Backend accepts it this way not just plain text
         };
-        
         await fetch(urlDel, requestOptions)
             .then(res => {
                 if(res.ok){               
