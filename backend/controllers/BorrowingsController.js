@@ -69,8 +69,10 @@ const BorrowingsController = {
             borrowings.forEach(borrowing => {
                 /* That  replace(/-/g, '\/').replace(/T.+/, '') is not needed either here because on the dabate its GMT 0 which is fine for this comparison because the 
                    previous startDate and endDate dont need that .replace() either*/
-                if(new Date(borrowing.borrowStart) >= startDate && 
-                    new Date(borrowing.borrowEnd) <= endDate){//Filter by start and end dates
+                   const borrowStart = new Date(borrowing.borrowStart)
+                   const borrowEnd = new Date(borrowing.borrowEnd)
+                if((borrowStart >= startDate && borrowStart <= endDate) || 
+                    (borrowEnd >= startDate && borrowEnd <= endDate)){//Filter, if the borrowing started and/or ended between the specified dates
                     filteredBorrowings.push(borrowing);//Add to filtered results
                     console.log(startDate)
                     console.log(endDate)

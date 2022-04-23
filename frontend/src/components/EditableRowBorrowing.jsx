@@ -43,8 +43,12 @@ const EditableRowBorrowing = ({borrowing, users, handleFormChange, handleCancelC
                 placeholder="end date" onChange={handleFormChange} style={inputStyle}/>
             </td>
             <td style={tableStyle}>
-                <input type="date" name="returnDate" defaultValue={format(parseISO(borrowing.returnDate), 'yyy-MM-dd')} 
-                placeholder="return date" onChange={handleFormChange} style={inputStyle}/>
+                {borrowing.returnDate != null || borrowing.returnDate != undefined ? 
+                    <input type="date" name="returnDate" defaultValue={format(parseISO(borrowing.returnDate), 'yyy-MM-dd')} 
+                    placeholder="return date" onChange={handleFormChange} style={inputStyle}/>
+                :
+                    <input type="date" name="returnDate" placeholder="return date" onChange={handleFormChange} style={inputStyle}/>
+                }
             </td>
             <td style={tableStyle}>
                 <input type="text" name="fine" defaultValue={borrowing.fine} 
