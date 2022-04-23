@@ -78,6 +78,7 @@ const BorrowingsController = {
             //Set fine value in the JSON
             req.body.fine = fine;
             const update = {
+                _idUser: req.body._idUser,
                 equipment : req.body.equipment,
                 borrowStart : req.body.borrowStart,
                 borrowEnd : req.body.borrowEnd,
