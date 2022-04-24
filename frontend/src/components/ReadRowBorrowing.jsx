@@ -25,7 +25,7 @@ const ReadRowBorrowing = ({borrowing, handleEditClick, handleDeleteClick}) => {
             <td style={tableStyle}>{format(new Date((borrowing.borrowStart).replace(/-/g, '\/').replace(/T.+/, '')), 'yyy-MM-dd')}</td>
             <td style={tableStyle}>{format(new Date((borrowing.borrowEnd).replace(/-/g, '\/').replace(/T.+/, '')), 'yyy-MM-dd')}</td>
             <td style={tableStyle}>{borrowing.returnDate != null ? 
-                                    format(parseISO(borrowing.returnDate), 'yyy-MM-dd') 
+                                    format(new Date((borrowing.returnDate).replace(/-/g, '\/').replace(/T.+/, '')), 'yyy-MM-dd') 
                                     : 'Unknown' }</td>
             <td style={tableStyle}>{borrowing.fine}</td>
             <td style={tableStyle}>{borrowing.status}</td>

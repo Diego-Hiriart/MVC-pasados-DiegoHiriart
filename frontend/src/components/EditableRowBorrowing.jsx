@@ -35,16 +35,16 @@ const EditableRowBorrowing = ({borrowing, users, handleFormChange, handleCancelC
             </td>
             {/*Use format to give the yyy-MM-dd format to the string obtained by parsing an ISO date, this formats the date correctly so that it can be usaed as a default value*/}
             <td style={tableStyle}>
-                <input type="date" name="borrowStart" required="required" defaultValue={format(parseISO(borrowing.borrowStart), 'yyy-MM-dd')} 
+                <input type="date" name="borrowStart" required="required" defaultValue={format(new Date((borrowing.borrowStart).replace(/-/g, '\/').replace(/T.+/, '')), 'yyy-MM-dd')} 
                 placeholder="start date" onChange={handleFormChange} style={inputStyle}/>
             </td>
             <td style={tableStyle}>
-                <input type="date" name="borrowEnd" required="required" defaultValue={format(parseISO(borrowing.borrowEnd), 'yyy-MM-dd')} 
+                <input type="date" name="borrowEnd" required="required" defaultValue={format(new Date((borrowing.borrowEnd).replace(/-/g, '\/').replace(/T.+/, '')), 'yyy-MM-dd')} 
                 placeholder="end date" onChange={handleFormChange} style={inputStyle}/>
             </td>
             <td style={tableStyle}>
                 {borrowing.returnDate != null || borrowing.returnDate != undefined ? 
-                    <input type="date" name="returnDate" defaultValue={format(parseISO(borrowing.returnDate), 'yyy-MM-dd')} 
+                    <input type="date" name="returnDate" defaultValue={format(new Date((borrowing.returnDate).replace(/-/g, '\/').replace(/T.+/, '')), 'yyy-MM-dd')} 
                     placeholder="return date" onChange={handleFormChange} style={inputStyle}/>
                 :
                     <input type="date" name="returnDate" placeholder="return date" onChange={handleFormChange} style={inputStyle}/>

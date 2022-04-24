@@ -219,18 +219,7 @@ function Borrowings(){
             })
         } 
 
-        const editedBorrowing = {
-            _id: editBorrowingId,
-            _idUser : borrowingForm._idUser,
-            equipment : borrowingForm.equipment,
-            borrowStart : borrowingForm.borrowStart,
-            borrowEnd : borrowingForm.borrowEnd,
-            returnDate : borrowingForm.returnDate,
-            fine : borrowingForm.fine,
-            status : borrowingForm.status
-        }
-
-        getFiltered(editedBorrowing);
+        getFiltered();
     }
 
     let content = 
